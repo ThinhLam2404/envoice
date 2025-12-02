@@ -6,7 +6,7 @@
     "prepare": "husky",
     "nx:reset": "nx reset",
     "nx:run-many": "nx run-many",
-    "dev": "pnpm nx:reset && pnpm nx:run-many --t serve",
+    "dev": "pnpm nx:run-many --t serve",
     "dev-lite": "pnpm dev --projects=bff"
   },
   "private": true,
@@ -21,7 +21,8 @@
     "class-validator": "^0.14.3",
     "express": "^5.2.1",
     "reflect-metadata": "^0.1.13",
-    "rxjs": "^7.8.0"
+    "rxjs": "^7.8.0",
+    "uuid": "^13.0.0"
   },
   "devDependencies": {
     "@commitlint/cli": "^20.1.0",
@@ -44,6 +45,7 @@
     "@types/express": "^5.0.6",
     "@types/jest": "^30.0.0",
     "@types/node": "20.19.9",
+    "@types/uuid": "^11.0.0",
     "eslint": "^9.8.0",
     "eslint-config-prettier": "^10.0.0",
     "husky": "^9.1.7",
