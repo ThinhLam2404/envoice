@@ -1,8 +1,8 @@
-import { AppConfiguration } from '@common/configuration/app.config';
 import { BaseConfiguration } from '@common/configuration/base.config';
-import { TcpConfiguration } from '@common/configuration/tcp.config';
-import { Type } from 'class-transformer';
+import { AppConfiguration } from '@common/configuration/app.config';
 import { ValidateNested } from 'class-validator';
+import { Type } from 'class-transformer';
+import { TcpConfiguration } from '@common/configuration/tcp.config';
 class Configuration extends BaseConfiguration {
   @ValidateNested()
   @Type(() => AppConfiguration)
