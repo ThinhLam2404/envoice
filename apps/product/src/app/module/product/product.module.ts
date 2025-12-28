@@ -1,7 +1,8 @@
 import { Module } from '@nestjs/common';
+import { TypeOrmProvider } from '@common/configuration/type-orm.config';
 
 @Module({
-  imports: [],
+  imports: [TypeOrmProvider],
   controllers: [],
   providers: [],
   exports: [],
