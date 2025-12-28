@@ -23,10 +23,10 @@ export class ExceptionInterceptor implements NestInterceptor {
         return data;
       }),
       catchError((error) => {
-        this.logger.error(error);
+        this.logger.error({ error });
         const durationMs = Date.now() - startTime;
         const message = error.response?.message || error.message || error || HTTP_MESSAGE.INTERNAL_SERVER_ERROR;
-        const code = error?.code || error.statusCode || error.response.statusCode || HttpStatus.INTERNAL_SERVER_ERROR;
+        const code = error?.code || error.statusCode || error?.response?.statusCode || HttpStatus.INTERNAL_SERVER_ERROR;
         throw new HttpException(
           new ResponseDto({ data: null, message, statusCode: code, duration: `${durationMs}ms`, processId }),
           code,

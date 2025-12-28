@@ -1,12 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-export class BaseResponseDto {
+export class BaseEntityResponseDto {
   @ApiProperty()
-  id: string;
-
+  id: number;
   @ApiProperty()
   createdAt: Date;
-
   @ApiProperty()
   updatedAt: Date;
 }
