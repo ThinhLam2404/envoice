@@ -1,4 +1,4 @@
-import { BadGatewayException, BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { ProductRepository } from '../repositories/product.repository';
 import { CreateProductTcpRequest, ProductTcpResponse } from '@common/interfaces/tcp/product';
 @Injectable()

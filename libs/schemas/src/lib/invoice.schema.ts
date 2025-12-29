@@ -1,5 +1,5 @@
-import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Model, ObjectId } from 'mongoose';
+import { Prop, Schema } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
 import { BaseSchema, createSchema } from './base.schema';
 import { INVOICE_STATUS } from '@common/constants/enum/invoice.enum';
 
