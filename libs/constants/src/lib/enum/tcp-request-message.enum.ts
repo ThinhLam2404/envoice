@@ -17,9 +17,14 @@ enum USER_ACCESS {
 enum KEYCLOAK {
   CREATE_USER = 'keycloak.create_user',
 }
+
+enum AUTHORIZER {
+  LOGIN = 'authorizer.logging',
+}
 export const TCP_REQUEST_MESSAGE = {
   INVOICE,
   PRODUCT,
   USER_ACCESS,
   KEYCLOAK,
+  AUTHORIZER,
 };
