@@ -1,3 +1,3 @@
-import type { LoggingRequestDto } from '../../gateway/authorizer';
+import type { LoginRequestDto } from '../../gateway/authorizer';
 
-export type LoggingTcpRequest = LoggingRequestDto;
+export type LoginTcpRequest = LoginRequestDto;

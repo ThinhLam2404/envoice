@@ -6,7 +6,7 @@ import {
   type CreateKeycloakUserRequest,
   type ExchangeUserTokenResponse,
 } from '@common/interfaces/common';
-import type { LoggingTcpRequest } from '@common/interfaces/tcp/authorizer';
+import type { LoginTcpRequest } from '@common/interfaces/tcp/authorizer';
 @Injectable()
 export class KeycloakHttpService {
   private readonly logger = new Logger(KeycloakHttpService.name);
@@ -66,7 +66,7 @@ export class KeycloakHttpService {
     return userId;
   }
 
-  async exchangeUserToken(params: LoggingTcpRequest): Promise<ExchangeUserTokenResponse> {
+  async exchangeUserToken(params: LoginTcpRequest): Promise<ExchangeUserTokenResponse> {
     const body = new URLSearchParams();
     body.append('client_id', this.clientId);
     body.append('client_secret', this.clientSecret);

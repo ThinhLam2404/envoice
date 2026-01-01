@@ -20,6 +20,7 @@ enum KEYCLOAK {
 
 enum AUTHORIZER {
   LOGIN = 'authorizer.logging',
+  VERIFY_USER_TOKEN = 'authorizer.verify_user_token',
 }
 export const TCP_REQUEST_MESSAGE = {
   INVOICE,
