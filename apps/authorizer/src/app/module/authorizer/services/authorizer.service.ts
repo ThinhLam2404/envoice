@@ -1,9 +1,15 @@
 import { AuthorizeResponse, LoginTcpRequest } from '@common/interfaces/tcp/authorizer';
-import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
+import { Inject, Injectable, Logger, UnauthorizedException } from '@nestjs/common';
 import { KeycloakHttpService } from '../../keycloak/services/keycloak-http.service';
 import jwt, { Jwt, JwtPayload } from 'jsonwebtoken';
 import JwksRsa, { JwksClient } from 'jwks-rsa';
 import { ConfigService } from '@nestjs/config';
+import { firstValueFrom, map } from 'rxjs';
+import { User } from '@common/schemas/user.schema';
+import { TCP_SERVICES } from '@common/configuration/tcp.config';
+import { TcpClient } from '@common/interfaces/tcp/common/tcp-client.interface';
+import { TCP_REQUEST_MESSAGE } from '@common/constants/enum/tcp-request-message.enum';
+import { Role } from '@common/schemas/role.schema';
 @Injectable()
 export class AuthorizerService {
   private readonly logger = new Logger(AuthorizerService.name);
@@ -11,6 +17,7 @@ export class AuthorizerService {
   constructor(
     private readonly keycloakHttpService: KeycloakHttpService,
     private readonly configService: ConfigService,
+    @Inject(TCP_SERVICES.USER_ACCESS_SERVICE) private readonly userAccessClient: TcpClient,
   ) {
     const host = this.configService.get('KEYCLOAK_CONFIG.HOST');
     const realm = this.configService.get('KEYCLOAK_CONFIG.REALM');
@@ -32,7 +39,7 @@ export class AuthorizerService {
     return { accessToken, refreshToken };
   }
 
-  async verifyUserToken(token: string): Promise<AuthorizeResponse> {
+  async verifyUserToken(token: string, processId: string): Promise<AuthorizeResponse> {
     const decoded = jwt.decode(token, { complete: true }) as Jwt;
     if (!decoded || !decoded.header || !decoded.header.kid) {
       throw new UnauthorizedException('Invalid token structure');
@@ -42,18 +49,35 @@ export class AuthorizerService {
       const publicKey = key.getPublicKey();
       const payload = jwt.verify(token, publicKey, { algorithms: ['RS256'] }) as JwtPayload;
       this.logger.debug(payload);
+      const user = await this.userValidation(payload.sub, processId);
       return {
         valid: true,
         metadata: {
           jwt: payload,
-          permission: [],
-          user: null,
-          userId: null,
+          permission: (user.roles as unknown as Role[]).map((role) => role.permissions).flat(),
+          user,
+          userId: user.id,
         },
       };
     } catch (error) {
       this.logger.error({ error });
       throw new UnauthorizedException('Invalid token');
     }
+  }
+
+  private async userValidation(userId: string, processId: string) {
+    const user = await this.getUserByUserId(userId, processId);
+    if (!user) {
+      throw new UnauthorizedException('User not found');
+    }
+    return user;
+  }
+
+  private getUserByUserId(userId: string, processId: string) {
+    return firstValueFrom(
+      this.userAccessClient
+        .send<User, string>(TCP_REQUEST_MESSAGE.USER_ACCESS.GET_BY_USER_ID, { data: userId, processId })
+        .pipe(map((data) => data.data)),
+    );
   }
 }
