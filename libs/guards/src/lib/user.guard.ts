@@ -7,12 +7,16 @@ import { TCP_SERVICES } from '@common/configuration/tcp.config';
 import { TcpClient } from '@common/interfaces/tcp/common/tcp-client.interface';
 import { TCP_REQUEST_MESSAGE } from '@common/constants/enum/tcp-request-message.enum';
 import { AuthorizeResponse } from '@common/interfaces/tcp/authorizer';
+import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import { Cache } from 'cache-manager';
+import { createHash } from 'crypto';
 @Injectable()
 export class UserGuard implements CanActivate {
   private readonly logger = new Logger(UserGuard.name);
   constructor(
     private readonly reflector: Reflector,
     @Inject(TCP_SERVICES.AUTHORIZER_SERVICE) private readonly authorizerClient: TcpClient,
+    @Inject(CACHE_MANAGER) private cacheManager: Cache,
   ) {}
   canActivate(context: ExecutionContext): boolean | Promise<boolean> | Observable<boolean> {
     const authOptions = this.reflector.get<{ secured: boolean }>(MetadataKeys.SECURED, context.getHandler());
@@ -28,12 +32,22 @@ export class UserGuard implements CanActivate {
   private async verifyToken(req: any): Promise<boolean> {
     try {
       const token = getAccessToken(req);
+      const cacheKey = this.generateTokenCache(token);
       const processId = req[MetadataKeys.PROCESS_ID];
+      const cacheData = await this.cacheManager.get<AuthorizeResponse>(cacheKey);
+      if (cacheData) {
+        setUserData(req, cacheData);
+        return true;
+      }
       const result = await this.verifyUserToken(token, processId);
       if (!result) {
         throw new UnauthorizedException('Token is invalid');
       }
+      this.logger.debug('set user data to cache for token: ', cacheKey);
       setUserData(req, result);
+
+      await this.cacheManager.set(cacheKey, result);
+
       return true;
     } catch (error) {
       this.logger.error({ error });
@@ -50,5 +64,10 @@ export class UserGuard implements CanActivate {
         })
         .pipe(map((data) => data.data)),
     );
+  }
+
+  generateTokenCache(token: string): string {
+    const hash = createHash('sha256').update(token).digest('hex');
+    return `user-token:${hash}`;
   }
 }

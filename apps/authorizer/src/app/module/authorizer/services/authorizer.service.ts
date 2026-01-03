@@ -48,7 +48,7 @@ export class AuthorizerService {
       const key = await this.jwksClient.getSigningKey(decoded.header.kid);
       const publicKey = key.getPublicKey();
       const payload = jwt.verify(token, publicKey, { algorithms: ['RS256'] }) as JwtPayload;
-      this.logger.debug(payload);
+      // this.logger.debug(payload);
       const user = await this.userValidation(payload.sub, processId);
       return {
         valid: true,

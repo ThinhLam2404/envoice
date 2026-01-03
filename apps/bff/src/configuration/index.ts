@@ -3,13 +3,19 @@ import { BaseConfiguration } from '@common/configuration/base.config';
 import { TcpConfiguration } from '@common/configuration/tcp.config';
 import { Type } from 'class-transformer';
 import { ValidateNested } from 'class-validator';
+import { RedisConfiguration } from '@common/configuration/redis.config';
 class Configuration extends BaseConfiguration {
   @ValidateNested()
   @Type(() => AppConfiguration)
   APP_CONFIG = new AppConfiguration();
+
   @ValidateNested()
   @Type(() => TcpConfiguration)
   TCP_SERV = new TcpConfiguration();
+
+  @ValidateNested()
+  @Type(() => RedisConfiguration)
+  REDIS_CONFIG = new RedisConfiguration();
 }
 
 export const CONFIGURATION = new Configuration();

@@ -28,7 +28,7 @@ export class InvoiceController {
     @ProcessId() processId: string,
     @UserData() userData: AuthorizedMetadata,
   ) {
-    Logger.debug('userData', userData);
+    // Logger.debug('userData', userData);
     return this.invoiceClient
       .send<InvoiceTcpResponse, CreateInvoiceTcpRequest>(TCP_REQUEST_MESSAGE.INVOICE.CREATE, {
         data: body,
