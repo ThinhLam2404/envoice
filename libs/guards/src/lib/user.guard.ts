@@ -49,6 +49,7 @@ export class UserGuard implements CanActivate {
         return true;
       }
       const { data: result } = await firstValueFrom(this.authorizerService.verifyUserToken({ processId, token }));
+      Logger.debug(result?.metadata.user);
       if (!result) {
         throw new UnauthorizedException('Token is invalid');
       }
