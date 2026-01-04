@@ -1,8 +1,8 @@
-import { Injectable, CanActivate, ExecutionContext, BadRequestException, ForbiddenException } from '@nestjs/common';
+import { Injectable, CanActivate, ExecutionContext, ForbiddenException, Logger } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { Permissions } from '@common/decorators/permission.decorator';
 import { PERMISSION } from '@common/constants/enum/role.enum';
-import { AuthorizedMetadata, type AuthorizeResponse } from '@common/interfaces/tcp/authorizer';
+import { AuthorizeResponse } from '@common/interfaces/tcp/authorizer';
 import { MetadataKeys } from '@common/constants/common.constant';
 @Injectable()
 export class PermissionGuard implements CanActivate {
