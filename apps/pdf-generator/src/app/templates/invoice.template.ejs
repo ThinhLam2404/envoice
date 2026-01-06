@@ -1,11 +1,119 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>Invoice</title>
+    <style>
+      body {
+        font-family: Arial, Helvetica, sans-serif;
+        background: #f4f6f8;
+        padding: 20px;
+      }
+      .invoice {
+        max-width: 800px;
+        margin: auto;
+        background: #fff;
+        padding: 24px;
+        border-radius: 8px;
+      }
+      .header {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 20px;
+      }
+      .status {
+        padding: 6px 12px;
+        border-radius: 4px;
+        color: #fff;
+        background: <%= status === 'PAID' ? '#2ecc71' : '#f39c12' %>;
+        font-size: 14px;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 16px;
+      }
+      th, td {
+        border: 1px solid #ddd;
+        padding: 10px;
+      }
+      th {
+        background: #f0f0f0;
+      }
+      .summary {
+        margin-top: 20px;
+        display: flex;
+        justify-content: flex-end;
+      }
+      .summary table {
+        width: 320px;
+      }
+      .summary .total {
+        font-weight: bold;
+        font-size: 16px;
+      }
+    </style>
   </head>
   <body>
-    <p>Invoice <%= invoice.id %></p>
+    <div class="invoice">
+      <!-- Header -->
+      <div class="header">
+        <div>
+          <h2>INVOICE</h2>
+          <p>
+            <strong>Customer:</strong> <%= client.name %><br />
+            <strong>Email:</strong> <%= client.email %><br />
+            <strong>Address:</strong> <%= client.address %>
+          </p>
+        </div>
+        <div>
+          <span class="status"><%= status %></span>
+        </div>
+      </div>
+
+      <!-- Items -->
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Product</th>
+            <th>Quantity</th>
+            <th>Price</th>
+            <th>VAT (%)</th>
+            <th>Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% items.forEach((item, index) => { %>
+          <tr>
+            <td><%= index + 1 %></td>
+            <td><%= item.name %></td>
+            <td><%= item.quantity %></td>
+            <td><%= item.unitPrice.toLocaleString() %></td>
+            <td><%= item.vatRate %></td>
+            <td><%= item.total.toLocaleString() %></td>
+          </tr>
+          <% }) %>
+        </tbody>
+      </table>
+
+      <!-- Summary -->
+      <div class="summary">
+        <table>
+          <tr>
+            <td>Subtotal</td>
+            <td style="text-align: right"><%= (totalAmount - vatAmount).toLocaleString() %></td>
+          </tr>
+          <tr>
+            <td>VAT</td>
+            <td style="text-align: right"><%= vatAmount.toLocaleString() %></td>
+          </tr>
+          <tr class="total">
+            <td>Total</td>
+            <td style="text-align: right"><%= totalAmount.toLocaleString() %></td>
+          </tr>
+        </table>
+      </div>
+    </div>
   </body>
 </html>
