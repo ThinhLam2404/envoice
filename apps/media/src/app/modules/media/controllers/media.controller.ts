@@ -17,7 +17,7 @@ export class MediaController {
     @RequestParams() data: UploadFileTcpRequest,
     @ProcessId() processId: string,
   ): Promise<Response<string>> {
-    const result = this.mediaService.uploadFile(data, processId);
+    const result = await this.mediaService.uploadFile(data, processId);
     return Response.success<string>(result);
   }
 }

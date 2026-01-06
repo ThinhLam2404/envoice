@@ -1,4 +1,4 @@
-import { BadRequestException, Inject, Injectable, Logger } from '@nestjs/common';
+import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { InvoiceRepository } from '../repositories/invoice.repository';
 import { CreateInvoiceTcpRequest, type SendInvoiceTcpRequest } from '@common/interfaces/tcp/invoice';
 import { InvoiceRequestMapping } from '../mappers';
