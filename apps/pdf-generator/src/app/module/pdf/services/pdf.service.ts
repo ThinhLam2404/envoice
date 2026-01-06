@@ -9,7 +9,7 @@ export class PdfService {
 
   async generatePdfFromEjs(templatePath: string, data: any) {
     const html = await this.renderEjsTemplate(templatePath, data);
-    this.logger.debug('html', html);
+    // this.logger.debug('html', html);
     return this.generatePdfFromHtml(html);
   }
 
