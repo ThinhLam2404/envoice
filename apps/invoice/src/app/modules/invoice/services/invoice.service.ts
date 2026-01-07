@@ -1,7 +1,7 @@
 import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { InvoiceRepository } from '../repositories/invoice.repository';
 import { CreateInvoiceTcpRequest, type SendInvoiceTcpRequest } from '@common/interfaces/tcp/invoice';
-import { InvoiceRequestMapping } from '../mappers';
+import { createCheckoutSessionMapping, InvoiceRequestMapping } from '../mappers';
 import { INVOICE_STATUS } from '@common/constants/enum/invoice.enum';
 import { ERROR_CODE } from '@common/constants/enum/error-code.enum';
 import { TCP_SERVICES } from '@common/configuration/tcp.config';
@@ -11,12 +11,14 @@ import { TCP_REQUEST_MESSAGE } from '@common/constants/enum/tcp-request-message.
 import type { Invoice } from '@common/schemas/invoice.schema';
 import { ObjectId } from 'mongodb';
 import { UploadFileTcpRequest } from '@common/interfaces/tcp/media';
+import { PaymentService } from '../../payment/services/payment.service';
 @Injectable()
 export class InvoiceService {
   constructor(
     private readonly invoiceRepository: InvoiceRepository,
     @Inject(TCP_SERVICES.PDF_GENERATOR_SERVICE) private readonly pdfGeneratorClient: TcpClient,
     @Inject(TCP_SERVICES.MEDIA_SERVICE) private readonly mediaClient: TcpClient,
+    private readonly paymentService: PaymentService,
   ) {}
   create(params: CreateInvoiceTcpRequest) {
     const input = InvoiceRequestMapping(params);
@@ -34,12 +36,14 @@ export class InvoiceService {
 
     const fileUpload = await this.uploadFile({ fileBase64: pdfBase64, fileName: `invoice-${invoiceId}` }, processId);
 
+    const checkoutData = await this.paymentService.createCheckoutSession(createCheckoutSessionMapping(invoice));
+
     await this.invoiceRepository.updateById(invoiceId, {
       status: INVOICE_STATUS.SENT,
       supervisorId: new ObjectId(userId),
       fileUrl: fileUpload,
     });
-    return fileUpload;
+    return checkoutData.url;
   }
 
   generatorInvoicePdf(data: Invoice, processId: string) {
