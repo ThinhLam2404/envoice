@@ -1,4 +1,4 @@
-import { BadRequestException, Inject, Injectable } from '@nestjs/common';
+import { BadRequestException, Inject, Injectable, Logger } from '@nestjs/common';
 import { InvoiceRepository } from '../repositories/invoice.repository';
 import { CreateInvoiceTcpRequest, type SendInvoiceTcpRequest } from '@common/interfaces/tcp/invoice';
 import { createCheckoutSessionMapping, InvoiceRequestMapping } from '../mappers';
@@ -13,6 +13,7 @@ import { ObjectId } from 'mongodb';
 import { UploadFileTcpRequest } from '@common/interfaces/tcp/media';
 import { PaymentService } from '../../payment/services/payment.service';
 import { KafkaService } from '@common/kafka/kafka.service';
+import { InvoiceSentPayload } from '@common/interfaces/queue/invoice';
 @Injectable()
 export class InvoiceService {
   constructor(
@@ -25,7 +26,7 @@ export class InvoiceService {
 
   create(params: CreateInvoiceTcpRequest) {
     const input = InvoiceRequestMapping(params);
-
+    Logger.debug(input);
     return this.invoiceRepository.create(input);
   }
 
@@ -47,12 +48,10 @@ export class InvoiceService {
       fileUrl: fileUpload,
     });
 
-    this.kafkaClient.emit('invoice-sent', {
-      invoiceId,
-      clientEmail: invoice.client.email,
+    this.kafkaClient.emit<InvoiceSentPayload>('invoice-sent', {
+      id: invoiceId,
+      paymentLink: checkoutData.url,
     });
-
-    return checkoutData.url;
   }
 
   generatorInvoicePdf(data: Invoice, processId: string) {
@@ -78,5 +77,9 @@ export class InvoiceService {
   }
   updateInvoicePaid(invoiceId: string) {
     return this.invoiceRepository.updateById(invoiceId, { status: INVOICE_STATUS.PAID });
+  }
+
+  getInvoiceById(invoiceId: string) {
+    return this.invoiceRepository.getById(invoiceId);
   }
 }
