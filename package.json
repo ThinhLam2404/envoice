@@ -75,6 +75,7 @@
     "jest": "^30.0.2",
     "jest-environment-node": "^30.0.2",
     "jest-util": "^30.0.2",
+    "kafkajs": "^2.2.4",
     "lint-staged": "^16.2.7",
     "nx": "22.1.1",
     "prettier": "^2.6.2",
