@@ -26,7 +26,7 @@ async function bootstrap() {
 
   const globalPrefix = 'api';
   app.setGlobalPrefix(globalPrefix);
-  const port = process.env.MAIL_PORT || 3007;
+  const port = process.env.MAIL_SERVICE_PORT || 3007;
 
   await app.startAllMicroservices();
   await app.listen(port);

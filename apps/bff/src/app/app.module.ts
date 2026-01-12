@@ -17,6 +17,7 @@ import { ThrottlerProvider } from '@common/configuration/throttler.config';
 import { ThrottlerGuard } from '@nestjs/throttler';
 import { GRPC_SERVICES, GrpcProvider } from '@common/configuration/grpc.config';
 import { WebhookModule } from './modules/webhook/webhook.module';
+import { HealthModule } from './modules/health/health.module';
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true, load: [() => CONFIGURATION] }),
@@ -29,6 +30,7 @@ import { WebhookModule } from './modules/webhook/webhook.module';
     ThrottlerProvider,
     ClientsModule.registerAsync([GrpcProvider(GRPC_SERVICES.AUTHORIZER_SERVICE)]),
     WebhookModule,
+    HealthModule,
   ],
   controllers: [],
   providers: [
