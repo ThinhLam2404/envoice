@@ -18,7 +18,8 @@ import { ThrottlerGuard } from '@nestjs/throttler';
 import { GRPC_SERVICES, GrpcProvider } from '@common/configuration/grpc.config';
 import { WebhookModule } from './modules/webhook/webhook.module';
 import { HealthModule } from './modules/health/health.module';
-import { LoggerModule } from '@common/observability/logger/logger.module';
+import { LoggerModule } from '@common/observability/logger';
+import { MetricsModule } from '@common/observability/metrics';
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true, load: [() => CONFIGURATION] }),
@@ -33,6 +34,7 @@ import { LoggerModule } from '@common/observability/logger/logger.module';
     WebhookModule,
     HealthModule,
     LoggerModule.forRoot('bff'),
+    MetricsModule,
   ],
   controllers: [],
   providers: [

@@ -52,6 +52,9 @@ importers:
       '@nestjs/typeorm':
         specifier: ^11.0.0
         version: 11.0.0(@nestjs/common@11.1.9(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.1.14)(rxjs@7.8.1))(@nestjs/core@11.1.9)(reflect-metadata@0.1.14)(rxjs@7.8.1)(typeorm@0.3.28(babel-plugin-macros@3.1.0)(ioredis@5.8.2)(mongodb@7.0.0(socks@2.8.7))(pg@8.16.3)(ts-node@10.9.1(@swc/core@1.5.29(@swc/helpers@0.5.17))(@types/node@20.19.9)(typescript@5.9.3)))
+      '@willsoto/nestjs-prometheus':
+        specifier: ^6.0.2
+        version: 6.0.2(@nestjs/common@11.1.9(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.1.14)(rxjs@7.8.1))(prom-client@15.1.3)
       axios:
         specifier: ^1.6.0
         version: 1.13.2
@@ -106,6 +109,9 @@ importers:
       pino-pretty:
         specifier: ^13.1.3
         version: 13.1.3
+      prom-client:
+        specifier: ^15.1.3
+        version: 15.1.3
       puppeteer:
         specifier: ^24.34.0
         version: 24.34.0(typescript@5.9.3)
@@ -1965,6 +1971,11 @@ packages:
     resolution:
       { integrity: sha512-qFG/CuoNXImIw0hMUYtFOql8Ed5I/4P37iASZeQQxksTjaShcfzl0Ei2tzAqAANNfef5ANfTdnczRnwwHchnfA== }
 
+  '@opentelemetry/api@1.9.0':
+    resolution:
+      { integrity: sha512-3giAOQvZiH5F9bMlMiv8+GSPMeqg0dbaeo58/0SlA9sxSqZhnUtxzX9/2FzyhS9sWQf5S0GJE0AKBrFqjpeYcg== }
+    engines: { node: '>=8.0.0' }
+
   '@parcel/watcher-android-arm64@2.5.1':
     resolution:
       { integrity: sha512-KF8+j9nNbUN8vzOFDpRMsaKBHZ/mcjEjMToVMJOhTozkDonQFFrRcfdLWn6yWKCmJKmdVxSgHiYvTCef4/qcBA== }
@@ -2996,6 +3007,13 @@ packages:
       webpack-dev-server:
         optional: true
 
+  '@willsoto/nestjs-prometheus@6.0.2':
+    resolution:
+      { integrity: sha512-ePyLZYdIrOOdlOWovzzMisIgviXqhPVzFpSMKNNhn6xajhRHeBsjAzSdpxZTc6pnjR9hw1lNAHyKnKl7lAPaVg== }
+    peerDependencies:
+      '@nestjs/common': ^7.0.0 || ^8.0.0 || ^9.0.0 || ^10.0.0 || ^11.0.0
+      prom-client: ^15.0.0
+
   '@xtuc/ieee754@1.2.0':
     resolution:
       { integrity: sha512-DX8nKgqcGwsc0eJSqYt5lwP4DH5FlHnmuWWBRy7X0NcaGR0ZtuyeESgMwTYVEtxmsNGY+qit4QYT/MIYTOTPeA== }
@@ -3403,6 +3421,10 @@ packages:
     resolution:
       { integrity: sha512-Ceh+7ox5qe7LJuLHoY0feh3pHuUDHAcRUeyL2VYghZwfpkNIy/+8Ocg0a3UuSoYzavmylwuLWQOf3hl0jjMMIw== }
     engines: { node: '>=8' }
+
+  bintrees@1.0.2:
+    resolution:
+      { integrity: sha512-VOMgTMwjAaUG580SXn3LacVgjurrbMme7ZZNYGSSV7mmtY6QQRh0Eg3pwIcntQ77DErK1L0NxkbetjcoXzVwKw== }
 
   bl@4.1.0:
     resolution:
@@ -6813,6 +6835,11 @@ packages:
       { integrity: sha512-7PiHtLll5LdnKIMw100I+8xJXR5gW2QwWYkT6iJva0bXitZKa/XMrSbdmg3r2Xnaidz9Qumd0VPaMrZlF9V9sA== }
     engines: { node: '>=0.4.0' }
 
+  prom-client@15.1.3:
+    resolution:
+      { integrity: sha512-6ZiOBfCywsD4k1BN9IX0uZhF+tJkV8q8llP64G5Hajs4JOeVLPCwpPVcpXy3BwYiUGgyJzsJJQeOIv7+hDSq8g== }
+    engines: { node: ^16 || ^18 || >=20 }
+
   protobufjs@7.5.4:
     resolution:
       { integrity: sha512-CvexbZtbov6jW2eXAvLukXjXUW1TzFaivC46BpWc/3BpcCysb5Vffu+B3XHMm8lVEuy2Mm4XGex8hBSg1yapPg== }
@@ -7706,6 +7733,10 @@ packages:
   tcp-port-used@1.0.2:
     resolution:
       { integrity: sha512-l7ar8lLUD3XS1V2lfoJlCBaeoaWo/2xfYt81hM7VlvR4RrMVFqfmzfhLVk40hAb368uitje5gPtBRL1m/DGvLA== }
+
+  tdigest@0.1.2:
+    resolution:
+      { integrity: sha512-+G0LLgjjo9BZX2MfdvPfH+MKLCrxlXSYec5DaPYP1fe6Iyhf0/fSmJ0bFiZ1F8BT6cGXl2LpltQptzjXKWEkKA== }
 
   terser-webpack-plugin@5.3.14:
     resolution:
@@ -10610,6 +10641,8 @@ snapshots:
       - '@swc/core'
       - debug
 
+  '@opentelemetry/api@1.9.0': {}
+
   '@parcel/watcher-android-arm64@2.5.1':
     optional: true
 
@@ -11567,6 +11600,11 @@ snapshots:
       webpack: 5.103.0(@swc/core@1.5.29(@swc/helpers@0.5.17))(webpack-cli@5.1.4)
       webpack-cli: 5.1.4(webpack@5.103.0)
 
+  '@willsoto/nestjs-prometheus@6.0.2(@nestjs/common@11.1.9(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.1.14)(rxjs@7.8.1))(prom-client@15.1.3)':
+    dependencies:
+      '@nestjs/common': 11.1.9(class-transformer@0.5.1)(class-validator@0.14.3)(reflect-metadata@0.1.14)(rxjs@7.8.1)
+      prom-client: 15.1.3
+
   '@xtuc/ieee754@1.2.0': {}
 
   '@xtuc/long@4.2.2': {}
@@ -11894,6 +11932,8 @@ snapshots:
   big.js@5.2.2: {}
 
   binary-extensions@2.3.0: {}
+
+  bintrees@1.0.2: {}
 
   bl@4.1.0:
     dependencies:
@@ -14906,6 +14946,11 @@ snapshots:
 
   progress@2.0.3: {}
 
+  prom-client@15.1.3:
+    dependencies:
+      '@opentelemetry/api': 1.9.0
+      tdigest: 0.1.2
+
   protobufjs@7.5.4:
     dependencies:
       '@protobufjs/aspromise': 1.1.2
@@ -15704,6 +15749,10 @@ snapshots:
       is2: 2.0.9
     transitivePeerDependencies:
       - supports-color
+
+  tdigest@0.1.2:
+    dependencies:
+      bintrees: 1.0.2
 
   terser-webpack-plugin@5.3.14(@swc/core@1.5.29(@swc/helpers@0.5.17))(webpack@5.103.0):
     dependencies:
