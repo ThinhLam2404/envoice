@@ -6,6 +6,7 @@ import { ValidateNested } from 'class-validator';
 import { RedisConfiguration } from '@common/configuration/redis.config';
 import { GrpcConfiguration } from '@common/configuration/grpc.config';
 import { StripeConfiguration } from '@common/configuration/stripe.config';
+import { LokiConfiguration } from '@common/configuration/loki.config';
 class Configuration extends BaseConfiguration {
   @ValidateNested()
   @Type(() => AppConfiguration)
@@ -26,6 +27,10 @@ class Configuration extends BaseConfiguration {
   @ValidateNested()
   @Type(() => StripeConfiguration)
   STRIPE_CONFIG = new StripeConfiguration();
+
+  @ValidateNested()
+  @Type(() => LokiConfiguration)
+  LOKI_CONFIG = new LokiConfiguration();
 }
 
 export const CONFIGURATION = new Configuration();
