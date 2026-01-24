@@ -2,80 +2,126 @@
 
 <a alt="Nx logo" href="https://nx.dev" target="_blank" rel="noreferrer"><img src="https://raw.githubusercontent.com/nrwl/nx/master/images/nx-logo.png" width="45"></a>
 
-✨ Your new, shiny [Nx workspace](https://nx.dev) is almost ready ✨.
+**Envoice** is a scalable, microservices-based invoice management system built with **NestJS** and **Nx**. It leverages an event-driven architecture with Kafka, robust authentication via Keycloak, and a modern infrastructure stack including PostgreSQL, MongoDB, and Redis.
 
-                [Learn              more about this workspace setup and its capabilities](https://nx.dev/nx-api/nest?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) or run `npx nx graph` to visually explore what was created. Now, let's get you up to speed!
+## 🏗 Architecture Overview
 
-## Finish your CI setup
+The system is designed as a **Monorepo** using Nx, enabling efficient development and code sharing.
 
-[Click here to finish setting up your workspace!](https://cloud.nx.app/connect/NmetfYMvFs)
+- **Backend**: NestJS Microservices
+- **Communication**:
+  - **Kafka**: Asynchronous event-driven communication between services.
+  - **REST**: Exposed by the BFF (Backend for Frontend) for client interactions.
+  - **gRPC**: Inter-service communication (internal).
+- **Database**:
+  - **PostgreSQL**: Primary transactional database (User, Invoice data).
+  - **MongoDB**: Flexible storage (Logs, Media metadata).
+  - **Redis**: Caching, session management, and rate limiting.
+- **Authentication**: Keycloak (Identity & Access Management).
+- **Infrastructure**: Dockerized environment with Prometheus, Grafana, and Loki for monitoring.
 
-## Run tasks
+## 📦 Microservices
 
-To run the dev server for your app, use:
+The application consists of the following microservices:
 
-```sh
+| Service             | Description                                                                    | Type         |
+| :------------------ | :----------------------------------------------------------------------------- | :----------- |
+| **`bff`**           | **Backend for Frontend**. Aggregates data and exposes REST APIs to the client. | API Gateway  |
+| **`user-access`**   | Manages user identities, authentication integration, and profiles.             | Microservice |
+| **`invoice`**       | Core domain service for managing invoices.                                     | Microservice |
+| **`product`**       | Manages product catalog and inventory data.                                    | Microservice |
+| **`pdf-generator`** | specialized service for generating PDF documents (e.g., invoices).             | Worker       |
+| **`media`**         | Handles file uploads and media asset management.                               | Microservice |
+| **`mail`**          | Handles email notifications and transactional, emails.                         | Worker       |
+| **`authorizer`**    | Centralized authorization and policy enforcement.                              | Microservice |
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+- **Node.js**: v20 or higher
+- **pnpm**: Package manager (`npm install -g pnpm`)
+- **Docker** & **Docker Compose**: For running the infrastructure
+
+### Installation
+
+1.  Clone the repository:
+
+    ```bash
+    git clone <repository-url>
+    cd envoice
+    ```
+
+2.  Install dependencies:
+    ```bash
+    pnpm install
+    ```
+
+## 🛠 Infrastructure Setup
+
+Before running the applications, you need to spin up the required infrastructure (Databases, Broker, Auth, etc.).
+
+1.  **Start Infrastructure**:
+    Using the provided provider compose file:
+
+    ```bash
+    docker-compose -f docker-compose.provider.yaml up -d
+    ```
+
+    **Services & Ports:**
+
+    - **Introduction**: 27017
+    - **PostgreSQL**: 5432
+    - **Redis**: 6379 (Insight UI: 5540)
+    - **Kafka**: 9092 (External: 29092)
+    - **Keycloak**: 8180 (Admin: admin/admin)
+    - **PgAdmin**: 5050 (Email: admin@admin.com / Pass: admin)
+    - **Grafana**: 3000 (Monitoring UI)
+    - **Prometheus**: 9090
+    - **Loki**: 3100
+    - **Promtail**: 3101
+
+## 🏃‍♂️ Running the Application
+
+You can run the entire suite or specific services using Nx.
+
+### Development Mode
+
+**Run everything (Heavy!):**
+
+```bash
+pnpm dev
+```
+
+**Run Lite Version (Selected Core Services):**
+Wrapper script defined in `package.json`:
+
+```bash
+pnpm dev-lite
+```
+
+_Runs: bff, user-access, authorizer, invoice, pdf-generator, media, mail_
+
+### Manual Service Start
+
+To run a specific service:
+
+```bash
+npx nx serve <app-name>
+# Example:
+npx nx serve bff
 npx nx serve invoice
 ```
 
-To create a production bundle:
+## 🧪 Development Commands
 
-```sh
-npx nx build invoice
-```
+- **Test**: `npx nx test <app>`
+- **Build**: `npx nx build <app>`
+- **Graph**: Visualize the project dependencies:
+  ```bash
+  npx nx graph
+  ```
 
-To see all available targets to run for a project, run:
+## 📝 License
 
-```sh
-npx nx show project invoice
-```
-
-These targets are either [inferred automatically](https://nx.dev/concepts/inferred-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) or defined in the `project.json` or `package.json` files.
-
-[More about running tasks in the docs &raquo;](https://nx.dev/features/run-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-## Add new projects
-
-While you could add new projects to your workspace manually, you might want to leverage [Nx plugins](https://nx.dev/concepts/nx-plugins?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) and their [code generation](https://nx.dev/features/generate-code?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) feature.
-
-Use the plugin's generator to create new projects.
-
-To generate a new application, use:
-
-```sh
-npx nx g @nx/nest:app demo
-```
-
-To generate a new library, use:
-
-```sh
-npx nx g @nx/node:lib mylib
-```
-
-You can use `npx nx list` to get a list of installed plugins. Then, run `npx nx list <plugin-name>` to learn about more specific capabilities of a particular plugin. Alternatively, [install Nx Console](https://nx.dev/getting-started/editor-setup?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) to browse plugins and generators in your IDE.
-
-[Learn more about Nx plugins &raquo;](https://nx.dev/concepts/nx-plugins?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) | [Browse the plugin registry &raquo;](https://nx.dev/plugin-registry?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-[Learn more about Nx on CI](https://nx.dev/ci/intro/ci-with-nx#ready-get-started-with-your-provider?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-## Install Nx Console
-
-Nx Console is an editor extension that enriches your developer experience. It lets you run tasks, generate code, and improves code autocompletion in your IDE. It is available for VSCode and IntelliJ.
-
-[Install Nx Console &raquo;](https://nx.dev/getting-started/editor-setup?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-## Useful links
-
-Learn more:
-
-- [Learn more about this workspace setup](https://nx.dev/nx-api/nest?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Learn about Nx on CI](https://nx.dev/ci/intro/ci-with-nx?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Releasing Packages with Nx release](https://nx.dev/features/manage-releases?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [What are Nx plugins?](https://nx.dev/concepts/nx-plugins?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-And join the Nx community:
-
-- [Discord](https://go.nx.dev/community)
-- [Follow us on X](https://twitter.com/nxdevtools) or [LinkedIn](https://www.linkedin.com/company/nrwl)
-- [Our Youtube channel](https://www.youtube.com/@nxdevtools)
-- [Our blog](https://nx.dev/blog?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+MIT

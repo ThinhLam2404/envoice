@@ -8,8 +8,8 @@ import { ProcessId } from '@common/decorators/processId.decorator';
 import { LoginTcpResponse, LoginTcpRequest } from '@common/interfaces/tcp/authorizer';
 import { TCP_REQUEST_MESSAGE } from '@common/constants/enum/tcp-request-message.enum';
 import { map } from 'rxjs';
-@Controller('Authorizer')
-@ApiTags('authorizer')
+@Controller('authorizer')
+@ApiTags('Authorizer')
 export class AuthorizerController {
   constructor(@Inject(TCP_SERVICES.AUTHORIZER_SERVICE) private readonly authorizerClient: TcpClient) {}
 
