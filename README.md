@@ -8,17 +8,53 @@
 
 The system is designed as a **Monorepo** using Nx, enabling efficient development and code sharing.
 
-- **Backend**: NestJS Microservices
-- **Communication**:
-  - **Kafka**: Asynchronous event-driven communication between services.
-  - **REST**: Exposed by the BFF (Backend for Frontend) for client interactions.
-  - **gRPC**: Inter-service communication (internal).
+### System Architecture
+
+The application follows a microservices architecture with an event-driven design:
+
+- **Client Implementation**:
+
+  - **Client/Frontend**: Interacts with the backend via the **BFF Service**.
+  - **BFF Service (HTTP :3000)**: Backend for Frontend that aggregates data and exposes endpoints to the client. It communicates with backend services via TCP and handles Webhooks.
+
+- **Core Microservices** (TCP Communication):
+
+  - **Invoice Service**: Handles CRUD operations for invoices.
+    - Sends "Generate PDF" requests to the **PDF Generator**.
+    - Sends "Upload File" requests to the **Media Service**.
+    - Triggers "Pay" requests to the **Payment Service**.
+    - Publishes `invoice.sent` events to **Kafka**.
+    - Reads/Writes to **MongoDB**.
+  - **User Access**: Manages user management and authentication.
+    - Connects to **Authorizer** (gRPC) for authentication.
+    - Uses **Keycloak (:8180)** for Identity Management.
+    - Reads/Writes to **MongoDB**.
+
+- **Support Services**:
+
+  - **PDF Generator**: Worker service for HTML to PDF conversion using Puppeteer.
+  - **Media Service**: Handles file uploads to **Cloudinary**.
+  - **Payment Service**: Integrates with **Stripe** for payment processing.
+  - **Mail Service**: Consumes events from **Kafka** to send emails via **SMTP Server**.
+  - **Authorizer**: gRPC service for centralized authorization.
+
+- **Security & Caching**:
+  - **UserGuard**: Cache layer acting as a guard check, utilizing **Redis (:6379)** for token caching and communicating with the Authorizer.
+
+### Infrastructure Stack
+
 - **Database**:
-  - **PostgreSQL**: Primary transactional database (User, Invoice data).
-  - **MongoDB**: Flexible storage (Logs, Media metadata).
-  - **Redis**: Caching, session management, and rate limiting.
-- **Authentication**: Keycloak (Identity & Access Management).
-- **Infrastructure**: Dockerized environment with Prometheus, Grafana, and Loki for monitoring.
+  - **MongoDB (Port 27017)**: Document database, Replica Set ready, used with Mongoose ODM.
+  - **PostgreSQL**: Primary transactional database.
+- **Messaging**:
+  - **Kafka (Port 9092)**: Event streaming platform implementing producer/consumer patterns with auto topic creation.
+- **Identity & Security**:
+  - **Keycloak (Port 8180)**: IAM solution supporting OAuth 2.0 / OpenID Connect and User Federation.
+  - **Redis (Port 6379)**: Usage for cache store, session management, and token caching (providing significant performance boosts). Includes Redis Insight UI (Port 5540).
+- **Observability**:
+  - **Grafana (Port 3000)**: Monitoring dashboard and log visualization.
+  - **Loki + Promtail (Port 3100)**: Log aggregation server and log collection agent using LogQL.
+  - **Prometheus**: Metrics collection.
 
 ## 📦 Microservices
 

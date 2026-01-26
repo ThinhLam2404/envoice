@@ -9,7 +9,7 @@ export class UserRepository {
     return this.userModel.create(data);
   }
   getAll() {
-    return this.userModel.find().exec();
+    return this.userModel.find().populate('roles').exec();
   }
   getById(id: string) {
     return this.userModel.findById(id).exec();

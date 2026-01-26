@@ -1,4 +1,4 @@
-import { Body, Controller, Inject, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Inject, Param, Post } from '@nestjs/common';
 import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { CreateInvoiceRequestDto, InvoiceResponseDto } from '@common/interfaces/gateway/invoice';
 import { ResponseDto } from '@common/interfaces/gateway/response.interface';
@@ -45,6 +45,19 @@ export class InvoiceController {
     return this.invoiceClient
       .send<string, SendInvoiceTcpRequest>(TCP_REQUEST_MESSAGE.INVOICE.SEND, {
         data: { invoiceId: id, userId: userData.userId },
+        processId,
+      })
+      .pipe(map((data) => new ResponseDto(data)));
+  }
+
+  @Get()
+  @ApiOkResponse({ type: ResponseDto<string> })
+  @ApiOperation({ summary: 'get all invoice' })
+  @Authorization({ secured: true })
+  @Permissions([PERMISSION.INVOICE_GET_ALL])
+  getAll(@ProcessId() processId: string) {
+    return this.invoiceClient
+      .send<string>(TCP_REQUEST_MESSAGE.INVOICE.GET_ALL, {
         processId,
       })
       .pipe(map((data) => new ResponseDto(data)));

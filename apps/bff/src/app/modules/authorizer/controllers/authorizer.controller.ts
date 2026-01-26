@@ -13,7 +13,7 @@ import { map } from 'rxjs';
 export class AuthorizerController {
   constructor(@Inject(TCP_SERVICES.AUTHORIZER_SERVICE) private readonly authorizerClient: TcpClient) {}
 
-  @Post()
+  @Post('login')
   @ApiOkResponse({ type: ResponseDto<LoginResponseDto> })
   @ApiOperation({ summary: 'Logging with username and password' })
   login(@Body() body: LoginRequestDto, @ProcessId() processId: string) {

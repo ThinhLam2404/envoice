@@ -13,7 +13,7 @@ export class StripeService {
 
   async createCheckoutSession(params: CreateCheckoutSessionRequest) {
     const session = await this.stripe.checkout.sessions.create({
-      payment_method_types: ['card', 'alipay', 'amazon_pay'],
+      payment_method_types: ['card'],
       mode: 'payment',
       success_url: this.configService.get<string>('STRIPE_CONFIG.SUCCESS_URL'),
       cancel_url: this.configService.get<string>('STRIPE_CONFIG.CANCEL_URL'),

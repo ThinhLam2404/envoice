@@ -82,4 +82,8 @@ export class InvoiceService {
   getInvoiceById(invoiceId: string) {
     return this.invoiceRepository.getById(invoiceId);
   }
+
+  getAllInvoices() {
+    return this.invoiceRepository.getAll();
+  }
 }

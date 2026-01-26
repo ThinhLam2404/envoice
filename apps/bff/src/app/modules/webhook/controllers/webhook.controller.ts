@@ -17,8 +17,6 @@ export class WebhookController {
     @Headers('stripe-signature') signature: string,
     @ProcessId() processId: string,
   ) {
-    Logger.debug('Webhook controller hit');
-
     await this.stripeWebhookService.processWebhook({
       rawBody: req.rawBody,
       signature,

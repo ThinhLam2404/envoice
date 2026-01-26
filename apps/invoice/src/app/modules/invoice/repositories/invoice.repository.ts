@@ -25,4 +25,8 @@ export class InvoiceRepository {
   deleteById(id: string) {
     return this.invoiceModel.findByIdAndDelete(id).exec();
   }
+
+  getAll() {
+    return this.invoiceModel.find().exec();
+  }
 }

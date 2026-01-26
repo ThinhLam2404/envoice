@@ -5,11 +5,15 @@ enum INVOICE {
   DELETE_BY_ID = 'invoice.delete_by_id',
   SEND = 'invoice.send',
   UPDATE_INVOICE_PAID = 'invoice.update_invoice_paid',
+  GET_ALL = 'invoice.get_all',
 }
 
 enum PRODUCT {
   CREATE = 'product.create',
   GET_LIST = 'product.get_list',
+  GET_BY_ID = 'product.get_by_id',
+  UPDATE_BY_ID = 'product.update_by_id',
+  DELETE_BY_ID = 'product.delete_by_id',
 }
 enum USER_ACCESS {
   CREATE = 'user.create',
@@ -34,6 +38,9 @@ enum MEDIA {
   UPLOAD_FILE = 'media.upload_file',
 }
 
+enum ROLE {
+  GET_ALL = 'role.get_all',
+}
 export const TCP_REQUEST_MESSAGE = {
   INVOICE,
   PRODUCT,
@@ -42,4 +49,5 @@ export const TCP_REQUEST_MESSAGE = {
   AUTHORIZER,
   PDF_GENERATOR,
   MEDIA,
+  ROLE,
 };

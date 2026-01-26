@@ -29,7 +29,7 @@ import { MetricsModule } from '@common/observability/metrics';
     AuthorizerModule,
     ClientsModule.registerAsync([TcpProvider(TCP_SERVICES.AUTHORIZER_SERVICE)]),
     RedisProvider,
-    ThrottlerProvider,
+    // ThrottlerProvider,
     ClientsModule.registerAsync([GrpcProvider(GRPC_SERVICES.AUTHORIZER_SERVICE)]),
     WebhookModule,
     HealthModule,
@@ -47,10 +47,10 @@ import { MetricsModule } from '@common/observability/metrics';
       provide: APP_GUARD,
       useClass: PermissionGuard,
     },
-    {
-      provide: APP_GUARD,
-      useClass: ThrottlerGuard,
-    },
+    // {
+    //   provide: APP_GUARD,
+    //   useClass: ThrottlerGuard,
+    // },
   ],
 })
 export class AppModule {

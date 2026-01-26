@@ -9,6 +9,7 @@ import { map } from 'rxjs';
 import { TCP_REQUEST_MESSAGE } from '@common/constants/enum/tcp-request-message.enum';
 import { CreateUserTcpRequest, type UserTcpResponse } from '@common/interfaces/tcp/user';
 import { Authorization } from '@common/decorators/authorizer.decorator';
+import { RoleTcpResponse } from '@common/interfaces/tcp/role';
 @ApiTags('User')
 @Controller('user')
 export class UserController {
@@ -33,6 +34,15 @@ export class UserController {
   getAll(@ProcessId() processId: string) {
     return this.userAccessClient
       .send<UserTcpResponse[]>(TCP_REQUEST_MESSAGE.USER_ACCESS.GET_ALL, { processId })
+      .pipe(map((data) => new ResponseDto(data)));
+  }
+
+  @Get('/role')
+  @ApiOkResponse({ type: ResponseDto<RoleTcpResponse[]> })
+  @ApiOperation({ summary: 'Get all role' })
+  getAllRole(@ProcessId() processId: string) {
+    return this.userAccessClient
+      .send<RoleTcpResponse[]>(TCP_REQUEST_MESSAGE.ROLE.GET_ALL, { processId })
       .pipe(map((data) => new ResponseDto(data)));
   }
 }

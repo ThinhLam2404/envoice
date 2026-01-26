@@ -22,7 +22,6 @@ export class StripeWebhookService {
 
   async processWebhook(params: { signature: string; rawBody: Buffer; processId: string }) {
     const { rawBody, signature, processId } = params;
-
     this.logger.log('Webhook handler START');
     const event = this.verifyWebhookSignature(rawBody, signature);
     this.logger.debug('Receive event: ' + JSON.stringify(event, null, 2));
@@ -36,6 +35,9 @@ export class StripeWebhookService {
             invoiceId: session.metadata.invoiceId,
             processId,
           });
+        } else {
+          this.logger.warn('Missing invoiceId in session metadata');
+          this.logger.debug('Session data: ' + JSON.stringify(session, null, 2));
         }
 
         break;
