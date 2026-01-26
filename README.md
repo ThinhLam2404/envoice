@@ -15,7 +15,7 @@ The application follows a microservices architecture with an event-driven design
 - **Client Implementation**:
 
   - **Client/Frontend**: Interacts with the backend via the **BFF Service**.
-  - **BFF Service (HTTP :3000)**: Backend for Frontend that aggregates data and exposes endpoints to the client. It communicates with backend services via TCP and handles Webhooks.
+  - **BFF Service (HTTP :3300)**: Backend for Frontend that aggregates data and exposes endpoints to the client. It communicates with backend services via TCP and handles Webhooks.
 
 - **Core Microservices** (TCP Communication):
 
@@ -157,6 +157,23 @@ npx nx serve invoice
   ```bash
   npx nx graph
   ```
+
+## 🚢 Deployment
+
+For detailed deployment instructions using Docker and Docker Compose, please refer to [DEPLOYMENT.md](./DEPLOYMENT.md).
+
+Quick start:
+
+```bash
+# 1. Start Infrastructure
+docker-compose -f docker-compose.provider.yaml up -d
+
+# 2. Build Apps
+pnpm nx run-many --target=build --all --prod
+
+# 3. Start Services
+docker-compose up -d --build
+```
 
 ## 📝 License
 

@@ -1,0 +1,112 @@
+version: '3.8'
+
+services:
+  bff:
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile
+      args:
+        APP_NAME: bff
+    container_name: envoice-bff
+    ports:
+      - '3300:3300'
+    environment:
+      - PORT=3300
+    networks:
+      - einvoice-nw
+    depends_on:
+      - user-access
+      - invoice
+
+  user-access:
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile
+      args:
+        APP_NAME: user-access
+    container_name: envoice-user-access
+    # Port 3003
+    environment:
+      - PORT=3003
+    networks:
+      - einvoice-nw
+
+  invoice:
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile
+      args:
+        APP_NAME: invoice
+    container_name: envoice-invoice
+    # Port 3001
+    environment:
+      - PORT=3001
+    networks:
+      - einvoice-nw
+
+  product:
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile
+      args:
+        APP_NAME: product
+    container_name: envoice-product
+    # Port 3002
+    environment:
+      - PORT=3002
+    networks:
+      - einvoice-nw
+
+  media:
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile
+      args:
+        APP_NAME: media
+    container_name: envoice-media
+    # Port 3006
+    environment:
+      - PORT=3006
+    networks:
+      - einvoice-nw
+
+  authorizer:
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile
+      args:
+        APP_NAME: authorizer
+    container_name: envoice-authorizer
+    # Port 3004
+    environment:
+      - PORT=3004
+    networks:
+      - einvoice-nw
+
+  mail:
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile
+      args:
+        APP_NAME: mail
+    container_name: envoice-mail
+    # Port 3007
+    environment:
+      - PORT=3007
+    networks:
+      - einvoice-nw
+
+  pdf-generator:
+    build:
+      context: .
+      dockerfile: ./docker/Dockerfile
+      args:
+        APP_NAME: pdf-generator
+    container_name: envoice-pdf-generator
+    # Port 3005
+    environment:
+      - PORT=3005
+
+networks:
+  einvoice-nw:
+    external: true
